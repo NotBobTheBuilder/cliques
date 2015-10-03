@@ -1,0 +1,11 @@
+{
+  "name": "cliques",
+  "version": "1.0.0",
+  "authors": [
+    "Jack Wearden <jack@jackwearden.co.uk>"
+  ],
+  "description": "A tool for organising group trips",
+  "main": "index.html",
+  "license": "MIT",
+  "homepage": "http://cliqu.es"
+}
