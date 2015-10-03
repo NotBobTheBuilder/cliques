@@ -27,6 +27,7 @@ app.use(function (req, res, next) {
   if (/\/^api/.test(req.url)) {
     next();
   } else {
+    console.log('serve static file')
     staticFiles(req, res, next);
   }
 })

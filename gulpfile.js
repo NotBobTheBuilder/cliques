@@ -30,6 +30,9 @@ gulp.task('default', ['templates'], function () {
   gulp.src('www/fonts/**/*')
     .pipe(gulp.dest('build/www/fonts/'));
 
+  gulp.src('srv/**/*')
+    .pipe(gulp.dest('build/srv'));
+
   gulp.src('www/index.html')
     .pipe(inline({
       base: 'www/',
