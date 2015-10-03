@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(function (req, res, next) {
-  if (/\/^api/.test(req.url)) {
+  if (/\/^api/.test(req.url) || /\/^pusher/.test(req.url)) {
     next();
   } else {
     console.log('serve static file')

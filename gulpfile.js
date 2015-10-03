@@ -33,6 +33,9 @@ gulp.task('default', ['templates'], function () {
   gulp.src('srv/**/*')
     .pipe(gulp.dest('build/srv'));
 
+  gulp.src('node_modules/**/*')
+    .pipe(gulp.dest('build/srv/node_modules'));
+
   gulp.src('www/index.html')
     .pipe(inline({
       base: 'www/',
