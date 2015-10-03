@@ -77,6 +77,7 @@ app.post('/api/cliques/:id/invite', function(req, res) {
   if (/^\d+$/.test(req.params.id)) {
     clique = db.cliques[id];
     if (req.body.numbers instanceof Array && req.body.numbers.every(isTel)) {
+      clique.members = req.body.numbers;
       var url = 'https://cliqu.es/#/cliques/' + clique.id + '/';
       req.body.numbers.map(function(n) {
         twilio.messages.create({
@@ -94,9 +95,24 @@ app.post('/api/cliques/:id/invite', function(req, res) {
   }
 });
 
-app.get('/api/debug', function (req, res) {
-  res.status(200).json(db);
-});
+app.post('/api/cliques/:id/panic', function(req, res) {
+  var id = req.params.id;
+  var clique;
+  if (/^\d+$/.test(req.params.id)) {
+    clique = db.cliques[id];
+    var url = 'https://cliqu.es/#/cliques/' + clique.id + '/';
+    clique.members.map(function(n) {
+      twilio.messages.create({
+        body: "Someone has pressed their panic button - please check in to help them find the group. " + url,
+        to: db.cliques[id].phone,
+        from: creds.TWILIO.PHONE
+      }, function (err, message) { if (err) { console.error(err); } });
+    });
+    res.status(202).send();
+  } else {
+    res.status(400).json({"error": "Invalid ID"});
+  }
+})
 
 app.listen(port, function () {
   console.log('now listening on port ' + port);
