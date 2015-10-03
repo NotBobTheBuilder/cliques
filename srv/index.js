@@ -1,7 +1,8 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
     app = express(),
-    twilio = require('twilio'),
+    creds = require('./creds.json'),
+    twilio = require('twilio')(creds.TWILIO.SID, creds.TWILIO.TOKEN),
     db = { cliques: {}, pins: {} },
     plan = 'YOLO',
     port = 7654;
@@ -30,6 +31,15 @@ app.post('/cliques/create', function (req, res) {
     };
     db.pins[id] = randomPin();
     res.status(202).send(db.cliques[id]);
+    twilio.messages.create({
+      body: "Time to verify yourself! Use this pin: " + db.pins[id],
+      to: db.cliques[id].phone,
+      from: creds.TWILIO.PHONE
+    }, function (err, message) {
+      console.log('Done');
+      console.error(err);
+      console.log(message);
+    });
   } else {
     res.status(400).json({"error": "Missing properties: all of clique, name, and phone are required"});
   }
