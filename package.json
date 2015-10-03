@@ -1,0 +1,19 @@
+{
+  "name": "cliques",
+  "version": "1.0.0",
+  "description": "A tool for managing group trips",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NotBobTheBuilder/cliques.git"
+  },
+  "author": "Jack Wearden",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NotBobTheBuilder/cliques/issues"
+  },
+  "homepage": "https://github.com/NotBobTheBuilder/cliques#readme"
+}
