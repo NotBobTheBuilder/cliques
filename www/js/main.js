@@ -18,9 +18,9 @@ cliques.config(function($routeProvider) {
       templateUrl: 'invite.html',
       controller: 'InviteController'
     })
-    .when('/cliques/invite/accept/:token', {
-      templateUrl: 'accept_invite.html',
-      controller: 'AcceptInviteController'
+    .when('/cliques/:id/', {
+      templateUrl: 'clique.html',
+      controller: 'CliqueController'
     })
     .otherwise({ redirectTo: '/' });
 });
@@ -97,6 +97,6 @@ cliques.controller('InviteController', function ($scope, $location, $routeParams
   }
 });
 
-cliques.controller('AcceptInviteController', function () {
+cliques.controller('CliqueController', function () {
 
 });
