@@ -4,17 +4,18 @@
   </div>
 
   <div class="ui vertical stripe quote segment v10vh">
-    <div class="ui equal width stackable internally celled grid">
-      <div class="center aligned row">
-        <button type="button" class="column">
-          <h3>"What a Company"</h3>
-          <p></p>
-        </button>
-        <button type="button" class="column">
-          <h3>Panic Button</h3>
-          <p>Press to find locations of your group members.</p>
-        </button>
-      </div>
-    </div>
+    <button ng-hide="loading || sent" ng-click="panic()" type="button" class="ui button red fluid">
+      <h3>Panic Button</h3>
+      <p>Press to find locations of your group members.</p>
+    </button>
+    <button ng-show="loading" disabled type="button" class="ui button red fluid loading">
+      <h3>Panic Button</h3>
+      <p>Press to find locations of your group members.</p>
+    </button>
+    <button ng-show="sent" disabled type="button" class="ui button red fluid">
+      <h3>SMS Panic Message Sent!</h3>
+      <p>Wait for your friends to appear on the map.</p>
+    </button>
+
   </div>
 </div>

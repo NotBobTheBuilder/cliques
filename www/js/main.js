@@ -33,7 +33,8 @@ cliques.factory('Clique', function ($resource) {
   return $resource('/api/cliques/:id/:action', {id: '@id'}, {
     create: { method: 'POST', params: { id: 'create'} },
     validate: { method: 'POST', params: { action: 'validate' } },
-    invite: { method: 'POST', params: { action: 'invite'}}
+    invite: { method: 'POST', params: { action: 'invite'}},
+    panic: { method: 'POST', params: {action: 'panic'}}
   });
 });
 
@@ -97,7 +98,7 @@ cliques.controller('InviteController', function ($scope, $location, $routeParams
   }
 });
 
-cliques.controller('CliqueController', function ($scope, ArcGISMap) {
+cliques.controller('CliqueController', function ($scope, $routeParams, ArcGISMap, Clique) {
   var pusher = new Pusher('bc1eb4a3db0243829910');
   var channel = pusher.subscribe('private-channel');
 
@@ -121,6 +122,17 @@ cliques.controller('CliqueController', function ($scope, ArcGISMap) {
       }
     );
   });
+
+  $scope.panic = function () {
+    $scope.loading = true;
+    Clique.panic({id: $routeParams.id}).$promise
+      .then(function() {
+        $scope.sent = true;
+      })
+      .finally(function() {
+        $scope.loading = false;
+      })
+  }
 });
 
 cliques.factory('ArcGISMap', function() {
