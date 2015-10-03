@@ -7,5 +7,9 @@
   "description": "A tool for organising group trips",
   "main": "index.html",
   "license": "MIT",
-  "homepage": "http://cliqu.es"
+  "homepage": "http://cliqu.es",
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-route": "~1.4.7"
+  }
 }

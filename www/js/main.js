@@ -14,6 +14,7 @@ cliques.config(function($routeProvider) {
       templateUrl: 'accept_invite.html',
       controller: 'AcceptInviteController'
     })
+    .otherwise({ redirectTo: '/' });
 });
 
 cliques.controller('HomeController', function () {
