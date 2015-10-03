@@ -14,6 +14,10 @@ cliques.config(function($routeProvider) {
       templateUrl: 'validate.html',
       controller: 'ValidateController'
     })
+    .when('/cliques/:id/invite', {
+      templateUrl: 'invite.html',
+      controller: 'InviteController'
+    })
     .when('/cliques/invite/accept/:token', {
       templateUrl: 'accept_invite.html',
       controller: 'AcceptInviteController'
@@ -26,7 +30,7 @@ cliques.controller('HomeController', function () {
 });
 
 cliques.factory('Clique', function ($resource) {
-  return $resource('/api/cliques/:id/:action', {}, {
+  return $resource('/api/cliques/:id/:action', {id: '@id'}, {
     create: { method: 'POST', params: { id: 'create'} },
     validate: { method: 'POST', params: { action: 'validate' } }
   });
@@ -42,8 +46,8 @@ cliques.controller('CreateController', function ($scope, $location, Clique) {
       .then(function(data) {
         $location.path('/cliques/' + data.id + '/validate');
       })
-      .catch(function() {
-
+      .catch(function(error) {
+        $scope.error = error;
       })
       .finally(function() {
         $scope.loading = false;
@@ -51,8 +55,28 @@ cliques.controller('CreateController', function ($scope, $location, Clique) {
   }
 });
 
-cliques.controller('ValidateController', function () {
+cliques.controller('ValidateController', function ($scope, $location, $routeParams, Clique) {
+  $scope.validate = {id: $routeParams.id};
+  $scope.loading = false;
 
+  $scope.submit = function() {
+    console.log($scope.validate);
+    $scope.loading = true;
+    Clique.validate($scope.validate).$promise
+      .then(function(data) {
+        $location.path('/cliques/' + $routeParams.id + '/invite');
+      })
+      .catch(function(error) {
+        $scope.error = error.error;
+      })
+      .finally(function() {
+        $scope.loading = false;
+      })
+  }
+});
+
+cliques.controller('InviteController', function ($scope) {
+  $scope.loading = false;
 });
 
 cliques.controller('AcceptInviteController', function () {

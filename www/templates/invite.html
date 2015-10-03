@@ -1,0 +1,21 @@
+<div class="create">
+  <div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h2 class="ui header">
+        <div class="content">Invite People</div>
+      </h2>
+      <form name="verification" ng-submit="submit()" method="post" class="ui large form">
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui left input">
+              <textarea ng-disabled="loading" ng-model="members" required placeholder="Mobile Numbers"></textarea>
+            </div>
+          </div>
+          <button type="submit" ng-hide="loading" class="ui fluid large teal submit button">Continue</button>
+          <button disabled ng-show="loading" class="ui fluid large teal submit button loading"></button>
+        </div>
+        <div class="ui error message"></div>
+      </form>
+    </div>
+  </div>
+</div>
