@@ -44,11 +44,7 @@ app.post('/api/cliques/create', function (req, res) {
       body: "Time to verify yourself! Use this pin: " + db.pins[id],
       to: db.cliques[id].phone,
       from: creds.TWILIO.PHONE
-    }, function (err, message) {
-      console.log('Done');
-      console.error(err);
-      console.log(message);
-    });
+    }, function (err, message) { if (err) { console.error(err); } });
   } else {
     res.status(400).json({"error": "Missing properties: all of clique, name, and phone are required"});
   }
@@ -75,6 +71,29 @@ app.post('/api/cliques/:id/validate', function (req, res) {
   }
 });
 
+app.post('/api/cliques/:id/invite', function(req, res) {
+  var id = req.params.id;
+  var clique;
+  if (/^\d+$/.test(req.params.id)) {
+    clique = db.cliques[id];
+    if (req.body.numbers instanceof Array && req.body.numbers.every(isTel)) {
+      var url = 'https://cliqu.es/#/cliques/' + clique.id + '/';
+      req.body.numbers.map(function(n) {
+        twilio.messages.create({
+          body: "You just joined a clique! To find your group, visit " + url,
+          to: db.cliques[id].phone,
+          from: creds.TWILIO.PHONE
+        }, function (err, message) { if (err) { console.error(err); } });
+      });
+      res.status(202).send();
+    } else {
+      res.status(400).json({"error": "Invalid Numbers Array"});
+    }
+  } else {
+    res.status(400).json({"error": "Invalid ID"});
+  }
+});
+
 app.get('/api/debug', function (req, res) {
   res.status(200).json(db);
 });
@@ -82,3 +101,7 @@ app.get('/api/debug', function (req, res) {
 app.listen(port, function () {
   console.log('now listening on port ' + port);
 });
+
+function isTel(n) {
+  return /^\+\d+$/.test(n);
+}
