@@ -4,6 +4,8 @@ var express = require('express'),
     app = express(),
     creds = require('./creds.json'),
     twilio = require('twilio')(creds.TWILIO.SID, creds.TWILIO.TOKEN),
+    Pusher = require('pusher'),
+    pusher = new Pusher({ appId: creds.PUSHER.APP_ID, key: creds.PUSHER.APP_KEY, secret: creds.PUSHER.APP_SECRET });
     db = { cliques: {}, pins: {} },
     plan = 'YOLO',
     port = 7654;
@@ -19,6 +21,7 @@ var randomPin = function () {
 }
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(function (req, res, next) {
   if (/\/^api/.test(req.url)) {
@@ -27,6 +30,13 @@ app.use(function (req, res, next) {
     staticFiles(req, res, next);
   }
 })
+
+app.post('/pusher/auth', function(req, res) {
+  var socketId = req.body.socket_id;
+  var channel = req.body.channel_name;
+  var auth = pusher.authenticate(socketId, channel);
+  res.send(auth);
+});
 
 app.post('/api/cliques/create', function (req, res) {
   if ((typeof req.body.clique + typeof req.body.name + typeof req.body.phone) == "stringstringstring") {

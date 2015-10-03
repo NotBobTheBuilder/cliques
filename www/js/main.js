@@ -97,6 +97,27 @@ cliques.controller('InviteController', function ($scope, $location, $routeParams
   }
 });
 
-cliques.controller('CliqueController', function () {
+cliques.controller('CliqueController', function ($scope) {
+  $scope.locations = [];
+  var pusher = new Pusher('bc1eb4a3db0243829910');
+  var channel = pusher.subscribe('private-channel');
 
+  channel.bind('client-location', function (data) {
+    $scope.locations.push(location);
+  });
+
+  channel.bind('pusher:subscription_succeeded', function() {
+    window.navigator.geolocation.getCurrentPosition(
+      function locationSuccess(loc) {
+        console.log('success');
+        console.log(loc);
+        var lat = loc.coords.latitude;
+        var long = loc.coords.longitude;
+        var triggered = channel.trigger('client-location', { latitude: lat, longitude: long });
+      }, function locationFail(err) {
+        console.log('fail');
+        console.error(loc);
+      }
+    );
+  });
 });
