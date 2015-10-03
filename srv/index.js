@@ -1,5 +1,6 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
+    staticFiles = express.static('build/www/'),
     app = express(),
     creds = require('./creds.json'),
     twilio = require('twilio')(creds.TWILIO.SID, creds.TWILIO.TOKEN),
@@ -19,7 +20,15 @@ var randomPin = function () {
 
 app.use(bodyParser.json());
 
-app.post('/cliques/create', function (req, res) {
+app.use(function (req, res, next) {
+  if (/\/^api/.test(req.url)) {
+    next();
+  } else {
+    staticFiles(req, res, next);
+  }
+})
+
+app.post('/api/cliques/create', function (req, res) {
   if ((typeof req.body.clique + typeof req.body.name + typeof req.body.phone) == "stringstringstring") {
     var id = uuid();
     db.cliques[id] = {
@@ -45,7 +54,7 @@ app.post('/cliques/create', function (req, res) {
   }
 });
 
-app.post('/cliques/:id/validate', function (req, res) {
+app.post('/api/cliques/:id/validate', function (req, res) {
   var id = req.params.id;
   var clique;
   if (/^\d+$/.test(req.params.id)) {
@@ -66,7 +75,7 @@ app.post('/cliques/:id/validate', function (req, res) {
   }
 });
 
-app.get('/debug', function (req, res) {
+app.get('/api/debug', function (req, res) {
   res.status(200).json(db);
 });
 
